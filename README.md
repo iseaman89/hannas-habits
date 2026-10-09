@@ -28,11 +28,18 @@ These show demo data, not anyone's real diary.
 
 On a phone the sidebar becomes a bar at the bottom:
 
-<p>
-  <img src="screenshots/daily-mobile.png" width="32%" alt="Daily diary on a phone">
-  <img src="screenshots/calendar-mobile.png" width="32%" alt="Year calendar on a phone">
-  <img src="screenshots/resolutions-mobile.png" width="32%" alt="Resolutions on a phone">
-</p>
+<table>
+  <tr>
+    <td align="center"><img src="screenshots/daily-mobile.png" width="250" alt="Daily diary on a phone"></td>
+    <td align="center"><img src="screenshots/calendar-mobile.png" width="250" alt="Year calendar on a phone"></td>
+    <td align="center"><img src="screenshots/resolutions-mobile.png" width="250" alt="Resolutions on a phone"></td>
+  </tr>
+  <tr>
+    <td align="center">Daily diary</td>
+    <td align="center">Calendar</td>
+    <td align="center">Resolutions</td>
+  </tr>
+</table>
 
 ## How it was built
 
