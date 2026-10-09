@@ -1,89 +1,106 @@
 # Hanna's Habits 🧘‍♀️📓
 
-A fullstack habit tracker and journaling app, originally developed for my wife to help her build daily routines, stay consistent, and reflect on her thoughts — while also serving as a personal project to improve my skills in fullstack development.
+A habit tracker with a daily diary, a year calendar and year resolutions. I started it for my wife, and it's also the project I use to learn how a real web app is put together, from the database to the screen.
 
-🛠️ Built during my training as a Software Developer (Fachinformatiker für Anwendungsentwicklung) to deepen my understanding of real-world web application architecture.
+I'm retraining as a software developer (Fachinformatiker für Anwendungsentwicklung).
 
----
+![The habit month: one row per habit, one circle per day, streaks on the right](screenshots/habits.png)
 
-## 📌 Project Repositories
+## What it does
 
-- 🧠 **Backend (.NET 8 + PostgreSQL)**  
-  [`hannas-habits-backend`](https://github.com/iseaman89/hannas-habits-server)]
+- **Habits.** A month grid. Tick a day, see the streak. Every habit has its own schedule, so a habit you only do on Monday, Wednesday and Friday isn't "broken" on Tuesday.
+- **Daily diary.** One page per day: mood, a highlight, what I'm grateful for, something I learnt, and a task list. It saves while you type, there is no save button.
+- **Calendar.** The whole year at a glance. Every day with an entry gets the colour of its mood, and a click opens that day.
+- **Resolutions.** A list per year. You can mark one as kept, or link it to the habit that tracks it.
+- Sign in with e-mail and password, or with Google. Light and dark theme. It works on a phone.
 
-- 💻 **Frontend (React + Tailwind CSS)**  
-  [`hannas-habits-frontend`](https://github.com/iseaman89/hannas-habits-ui)
+## Screenshots
 
----
+These show demo data, not anyone's real diary.
 
-## 🔧 Tech Stack
+![The daily diary](screenshots/daily.png)
 
-**Frontend**  
-- React, React Router  
-- Tailwind CSS  
-- Axios  
+![The year calendar, coloured by mood](screenshots/calendar.png)
 
-**Backend**  
-- ASP.NET Core (.NET 8)  
-- Entity Framework Core  
-- PostgreSQL  
-- JWT Authentication  
-- ASP.NET Identity
+![Resolutions for the year](screenshots/resolutions.png)
 
-**Other Tools**  
-- Git & GitHub  
-- Docker   
-- RESTful API
+![The login screen](screenshots/login.png)
 
----
+On a phone the sidebar becomes a bar at the bottom:
 
-## ✨ Features
+<p>
+  <img src="screenshots/daily-mobile.png" width="32%" alt="Daily diary on a phone">
+  <img src="screenshots/calendar-mobile.png" width="32%" alt="Year calendar on a phone">
+  <img src="screenshots/resolutions-mobile.png" width="32%" alt="Resolutions on a phone">
+</p>
 
-✔️ User registration & login (JWT-based)  
-✔️ Add, edit and delete personal habits  
-✔️ Daily habit check-in system  
-✔️ Mobile-friendly responsive UI  
-✔️ Secure and scalable backend
+## How it was built
 
----
+I'd rather tell you this myself than have you find it in the commit history: most of the code in the current version was written together with Claude Code, an AI coding assistant from Anthropic. You'll see `Co-Authored-By: Claude` on the commits.
 
-## 🧪 Screenshots
+How that went, roughly:
 
-![screenshot1](./screenshots/login.png)  
-![screenshot2](./screenshots/daily.png)
-![screenshot3](./screenshots/habits.png)
-![screenshot4](./screenshots/calendar.png)
-![screenshot5](./screenshots/resolutions.png)
+The first version, a couple of years ago, was mine alone. I got stuck on the frontend and put the project down for a long time. In October 2026 I picked it up again with one goal: finish it. This time we started with a plan ([`docs/ROADMAP.md`](https://github.com/iseaman89/hannas-habits-server/blob/main/docs/ROADMAP.md) in the backend repo), worked through it in small steps, and kept a log of every step and why it was done that way ([`docs/PROGRESS.md`](https://github.com/iseaman89/hannas-habits-server/blob/main/docs/PROGRESS.md)).
 
----
+What I decided: what the app does, what it leaves out, and the architecture. Clean Architecture, DDD and CQRS are in there on purpose, even though a habit tracker doesn't need that much structure. That's what a learning project is for. I asked Claude to give me a short reason whenever it used a pattern, and to say so when something was over-engineered.
 
-## 🚀 Getting Started
+What Claude did: a lot of the typing, for the code and for the tests. I check what comes out, and I'm the one who opens the app in the browser and says what's wrong.
 
-Each part of the project has its own README with setup instructions.  
-See the corresponding repositories for details:
+I'm telling you this because it's true, and because I think working with an AI assistant is a skill of its own. Small steps, tests as a safety net, and understanding what I merge. I'm still learning that part too.
 
-- 🔗 [Backend Setup](https://github.com/iseaman89/hannas-habits-server)
-- 🔗 [Frontend Setup](https://github.com/iseaman89/hannas-habits-ui)
+## Under the hood
 
----
+The project is two repositories.
 
-## 📚 What I Learned
+**Backend** ([hannas-habits-server](https://github.com/iseaman89/hannas-habits-server))
+- ASP.NET Core 8, Entity Framework Core, PostgreSQL
+- Four projects with the dependency rule pointing inwards (Domain, Application, Infrastructure, WebApi). The architecture tests fail the build if someone breaks it.
+- Use cases with MediatR (one folder per command or query), validation with FluentValidation
+- Sign-in with ASP.NET Identity, short-lived JWT access tokens and refresh tokens that rotate on every use. If an old refresh token is used again, all sessions of that user are revoked.
+- About 800 tests: unit tests, handler tests with hand-written fakes instead of a mocking library, architecture tests, and integration tests against a real PostgreSQL in a Testcontainers container, including forced race conditions
+- Docker Compose for the API and the database, GitHub Actions builds and tests every push
 
-While building this project, I focused on:
+**Frontend** ([hannas-habits-ui](https://github.com/iseaman89/hannas-habits-ui))
+- React 18, TypeScript (strict), Vite, Tailwind CSS 4
+- TanStack Query for server state, React Hook Form with zod for forms, React Router
+- The API types are generated from the backend's OpenAPI document, so changing an endpoint breaks the type check instead of breaking in the browser
+- Its own small design system, built from a redesign mockup in Claude Design
+- Over 900 tests with Vitest, and a Docker image served by nginx
 
-- Designing and structuring a real-world fullstack application
-- Applying **SOLID principles** and **clean code architecture**
-- Working with **Entity Framework Migrations** and **DTOs**
-- Securing APIs with **JWT and ASP.NET Identity**
-- Building responsive UIs and managing **state** efficiently in React
+## Run it yourself
 
----
+Each repository has the full instructions. The short version:
 
-## 🧑‍💻 About Me
+```bash
+# backend: API + PostgreSQL on http://localhost:8080
+git clone https://github.com/iseaman89/hannas-habits-server.git
+cd hannas-habits-server
+cp .env.example .env        # fill in the values, the file explains each one
+docker compose up --build
 
-Hi, I'm **Yevgen Panych**, a career-changer currently training as a Fachinformatiker AE in Bremen, Germany. I'm passionate about fullstack development and always excited to learn new technologies.
+# frontend, in another terminal: http://localhost:5173
+git clone https://github.com/iseaman89/hannas-habits-ui.git
+cd hannas-habits-ui
+cp .env.example .env        # point VITE_API_URL at the API
+npm install
+npm run dev
+```
+
+One thing that may trip you up: the API refuses to start without a Google OAuth client id, because Google sign-in checks the ID tokens against it. The id is public, not a secret, and the backend's `.env.example` says where it comes from.
+
+## What's not there
+
+- No password reset and no e-mail confirmation yet.
+- The interface is in English only.
+- If you keep a day open in two tabs or on two devices, the tab that saves last wins.
+
+## What I practised
+
+Keeping layers apart so the domain doesn't know about the database. Writing tests that check state instead of call sequences. Handling two requests that hit the same row at the same time. Token rotation and what a stolen refresh token looks like on the server. Generating types from an API contract. Getting a project to build and test on a machine that isn't mine (Docker and CI). And writing down why I did something, so I can still understand it a month later.
+
+## About me
+
+I'm **Yevgen Panych**, a career-changer in training as a Fachinformatiker AE in Bremen, Germany.
 
 📫 [LinkedIn](https://www.linkedin.com/in/yevgen-panych)  
-🌐 [Portfolio](https://panych.site)  
 🐙 [GitHub](https://github.com/iseaman89)
-
